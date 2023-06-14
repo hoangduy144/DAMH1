@@ -28,7 +28,9 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 
-public class SlangFormUI extends JPanel implements ActionListener {
+import model.Dict;
+
+public class SlangForm extends JPanel implements ActionListener {
 	JButton addButton, editButton, clearButton, searchButton, deleteButton;
 	JList resultList;
 	DefaultListModel<String> listModel;
@@ -43,8 +45,14 @@ public class SlangFormUI extends JPanel implements ActionListener {
 	JScrollPane historyPanel;
 	JTextArea historyArea;
 
-	public SlangFormUI(Dict d) {
+	public SlangForm(Dict d) {
 		dict = d;
+		addControls();
+		addEvents();
+	}
+
+	private void addControls() {
+		
 		setLayout(new BorderLayout());
 
 		JPanel pnLeft = new JPanel();
@@ -122,10 +130,10 @@ public class SlangFormUI extends JPanel implements ActionListener {
 		listModel = new DefaultListModel<>();
 		resultList = new JList(listModel);
 		resultList.addListSelectionListener((ListSelectionEvent e) -> {
-			
-            definitionField.setText((String) resultList.getSelectedValue());
-            slangField.setText(searchSlangField.getText());
-        });
+
+			definitionField.setText((String) resultList.getSelectedValue());
+			slangField.setText(searchSlangField.getText());
+		});
 		resultPane = new JScrollPane(resultList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		deleteButton = new JButton("Delete");
@@ -160,73 +168,107 @@ public class SlangFormUI extends JPanel implements ActionListener {
 		definitionLabel.setPreferredSize(slangLabel.getPreferredSize());
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == addButton) {
-			String slang = slangField.getText();
-			String definition = definitionField.getText();
-			if (dict.hasSlang(slang)) {
-				String[] options = { "Tạo mới", "Ghi đè" };
-				int choice = JOptionPane.showOptionDialog(null, "Slangword đã tồn tại", "Slangword đã tồn tại",
-						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-				if (choice == 0) {
-					dict.AddDefinition(slang, definition);
-					if (slang.equals(searchSlangField.getText())) {
-						listModel.addElement(definition);
+	private void addEvents() {
+		addButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String slang = slangField.getText();
+				String definition = definitionField.getText();
+				if (dict.hasSlang(slang)) {
+					String[] options = { "Tạo mới", "Ghi đè" };
+					int choice = JOptionPane.showOptionDialog(null, "Slangword đã tồn tại", "Slangword đã tồn tại",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+					if (choice == 0) {
+						dict.AddDefinition(slang, definition);
+						if (slang.equals(searchSlangField.getText())) {
+							listModel.addElement(definition);
+						}
+					} else {
+						dict.AddNew(slang, definition);
+						if (slang.equals(searchSlangField.getText())) {
+							listModel.removeAllElements();
+							listModel.addElement(definition);
+						}
 					}
+
 				} else {
 					dict.AddNew(slang, definition);
-					if (slang.equals(searchSlangField.getText())) {
-						listModel.removeAllElements();
-						listModel.addElement(definition);
-					}
+					JOptionPane.showMessageDialog(null, "Thêm thành công");
 				}
 
-			} else {
-				dict.AddNew(slang, definition);
-				JOptionPane.showMessageDialog(null, "Thêm thành công");
 			}
-		} else if (e.getSource() == editButton) {
-			if (dict.EditSlang(searchSlangField.getText(), (String) resultList.getSelectedValue(),
-					definitionField.getText())) {
-				listModel.addElement(definitionField.getText());
-				listModel.removeElement(resultList.getSelectedValue());
-			} else {
-				JOptionPane.showMessageDialog(addButton, "Không tìm thấy slangword");
-			}
-		} else if (e.getSource() == deleteButton) {
-			int choice = JOptionPane.showConfirmDialog(deleteButton, "Slangword sẽ được xóa", "Xóa",
-					JOptionPane.YES_NO_OPTION);
-			if (choice == 0) {
-				dict.deleteSlang(searchSlangField.getText());
-				listModel.removeAllElements();
-				slangField.setText("");
-				searchSlangField.setText("");
-			}
-		} else if (e.getSource() == searchButton) {
-			listModel.removeAllElements();
-			HashSet<String> defSet = dict.searchSlang(searchSlangField.getText());
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			Date date = new Date();
-			String time = formatter.format(date);
-			String history = time + " |   " + searchSlangField.getText();
-			if (defSet != null) {
-				for (String s : defSet) {
-					listModel.addElement(s.strip());
+		});
+		editButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (dict.EditSlang(searchSlangField.getText(), (String) resultList.getSelectedValue(),
+						definitionField.getText())) {
+					listModel.addElement(definitionField.getText());
+					listModel.removeElement(resultList.getSelectedValue());
+				} else {
+					JOptionPane.showMessageDialog(addButton, "Không tìm thấy slangword");
 				}
-			} else {
-				JOptionPane.showMessageDialog(resultList, "Slangword is not in dictionary");
+
 			}
-			dict.AddHistory(history);
-			historyArea.append("\n" + history);
-		} else if (e.getSource() == clearButton) {
-			slangField.setText("");
-			definitionField.setText("");
-		}
+		});
+		deleteButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int choice = JOptionPane.showConfirmDialog(deleteButton, "Slangword sẽ được xóa", "Xóa",
+						JOptionPane.YES_NO_OPTION);
+				if (choice == 0) {
+					dict.deleteSlang(searchSlangField.getText());
+					listModel.removeAllElements();
+					slangField.setText("");
+					searchSlangField.setText("");
+				}
+
+			}
+		});
+		searchButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				listModel.removeAllElements();
+				HashSet<String> defSet = dict.searchSlang(searchSlangField.getText());
+				SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				Date date = new Date();
+				String time = formatter.format(date);
+				String history = time + " |   " + searchSlangField.getText();
+				if (defSet != null) {
+					for (String s : defSet) {
+						listModel.addElement(s.strip());
+					}
+				} else {
+					JOptionPane.showMessageDialog(resultList, "Slangword is not in dictionary");
+				}
+				dict.AddHistory(history);
+				historyArea.append("\n" + history);
+
+			}
+		});
+		clearButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				slangField.setText("");
+				definitionField.setText("");
+
+			}
+		});
 	}
-	
+
 	public void clearHistory() {
 		historyArea.setText("");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
