@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class Dict {
-	///////////////Tham khảo trên Internet nhưng tự code lại theo tìm hiểu của bản thân////////////////
+	///////////////Tham khảo trên Internet nhưng tự code lại theo tìm hiểu của bản thân///////////////
     private HashMap<String, LinkedList<String>> dictionary;
     private LinkedList<String> historyList;
 
