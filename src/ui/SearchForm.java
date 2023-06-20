@@ -30,9 +30,9 @@ import javax.swing.event.ListSelectionEvent;
 
 import model.Dict;
 
-public class SearchForm extends JPanel implements ActionListener {
+public class SearchForm extends JPanel{
 	JButton searchButton;
-	JList resultList;
+	JList<String> resultList;
 	DefaultListModel<String> listModel;
 	Dict dict;
 	JLabel slangLabel, definitionLabel, searchDefinitionLabel;
@@ -104,7 +104,6 @@ public class SearchForm extends JPanel implements ActionListener {
 		searchDefinitionLabel = new JLabel("Definition");
 		searchDefinitionField = new JTextField(15);
 		searchButton = new JButton("Search");
-		searchButton.addActionListener(this);
 		pnSlang.add(searchDefinitionLabel);
 		pnSlang.add(searchDefinitionField);
 		pnSlang.add(searchButton);
@@ -112,7 +111,7 @@ public class SearchForm extends JPanel implements ActionListener {
 
 		listModel = new DefaultListModel<String>();
 		
-		resultList = new JList(listModel);
+		resultList = new JList<String>(listModel);
 		resultList.addListSelectionListener((ListSelectionEvent e) -> {
 
 			definitionField.setText((String) resultList.getSelectedValue());
@@ -176,10 +175,5 @@ public class SearchForm extends JPanel implements ActionListener {
 
 	public void clearHistory() {
 		historyArea.setText("");
-	}
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 }

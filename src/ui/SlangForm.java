@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
@@ -32,7 +31,7 @@ import model.Dict;
 
 public class SlangForm extends JPanel{
 	JButton addButton, editButton, clearButton, searchButton, deleteButton;
-	JList resultList;
+	JList<String> resultList;
 	DefaultListModel<String> listModel;
 	Dict dict;
 	JLabel slangLabel, definitionLabel, searchSlangLabel;
@@ -119,7 +118,7 @@ public class SlangForm extends JPanel{
 		pnRight.add(pnSlang);
 
 		listModel = new DefaultListModel<>();
-		resultList = new JList(listModel);
+		resultList = new JList<String>(listModel);
 		resultList.addListSelectionListener((ListSelectionEvent e) -> {
 
 			definitionField.setText((String) resultList.getSelectedValue());
