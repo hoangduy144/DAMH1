@@ -1,0 +1,23 @@
+Đặng Hồ Hoàng Duy - 21424073
+
+Các chức năng
+1. Chức năng tìm kiếm theo slang word.					|	10/10
+2. Chức năng tìm kiếm theo definition, hiển thị ra tất cả các slang words mà trong	|	10/10
+defintion có chứa keyword gõ vào.
+3. Chức năng hiển thị history, danh sách các slang word đã tìm kiếm.		|	10/10
+4. Chức năng add 1 slang words mới. Nếu slang words trùng thì thông báo cho người	|	10/10
+dùng, confirm có overwrite hay duplicate ra 1 slang word mới.
+5. Chức năng edit 1 slang word.						|	10/10
+6. Chức năng delete 1 slang word. Confirm trước khi xoá.			|	10/10
+7. Chức năng reset danh sách slang words gốc.				|	10/10
+8. Chức năng random 1 slang word (On this day slang word).			|	10/10
+9. Chức năng đố vui, chương trình hiển thị 1 random slang word, với 4 đáp án cho	|	10/10
+người dùng chọn.
+10. Chức năng đố vui, chương trình hiển thị 1 definition, với 4 slang words đáp án cho	|	0/10
+người dùng chọn
+
+Link Youtube:
+https://youtu.be/I7y1_1CDgbw
+
+Link Github:
+https://github.com/hoangduy144/DAMH1
